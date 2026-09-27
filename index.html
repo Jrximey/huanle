@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#100c10">
+  <meta name="description" content="今宵多欢畅——一段关于朋友、风雨与珍惜的影像。">
+  <title>今宵多欢畅</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23140e12'/%3E%3Cpath d='M18 13h28c0 14-4.8 22-14 22S18 27 18 13Z' fill='none' stroke='%23f4b37b' stroke-width='4'/%3E%3Cpath d='M32 35v12M23 51h18' stroke='%23f4b37b' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f8f1eb;
+      --muted: #a99ca4;
+      --wine: #7c233a;
+      --rose: #d66a76;
+      --amber: #f4b37b;
+      --surface: rgba(30, 22, 28, 0.82);
+      --stroke: rgba(255, 255, 255, 0.085);
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 7% 14%, rgba(124, 35, 58, 0.24), transparent 27rem),
+        radial-gradient(circle at 92% 84%, rgba(188, 91, 67, 0.16), transparent 30rem),
+        linear-gradient(145deg, #0d0b0f 0%, #171016 52%, #0d0c10 100%);
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.3;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+    }
+
+    .ambient {
+      position: fixed;
+      width: 28rem;
+      height: 28rem;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(100px);
+      opacity: 0.12;
+      background: var(--rose);
+      animation: drift 15s ease-in-out infinite alternate;
+    }
+
+    .ambient.one { top: -16rem; right: 10%; }
+    .ambient.two { bottom: -20rem; left: 16%; animation-delay: -8s; background: var(--amber); }
+
+    .page {
+      width: min(1680px, 100%);
+      height: 100svh;
+      margin: 0 auto;
+      padding: clamp(20px, 3vw, 52px);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: clamp(18px, 2vw, 30px);
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      margin: 0 0 7px;
+      color: var(--amber);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Songti SC", "STSong", "SimSun", serif;
+      font-size: clamp(2rem, 4vw, 4.5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: 0.03em;
+    }
+
+    .memory-tag {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+
+    .memory-tag::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--rose);
+      box-shadow: 0 0 16px var(--rose);
+    }
+
+    main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(310px, 0.82fr);
+      gap: clamp(18px, 2vw, 30px);
+    }
+
+    .card {
+      border: 1px solid var(--stroke);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px) saturate(115%);
+      -webkit-backdrop-filter: blur(24px) saturate(115%);
+    }
+
+    .video-card {
+      min-height: 0;
+      padding: clamp(10px, 1.2vw, 18px);
+      border-radius: clamp(22px, 2.4vw, 38px);
+      display: flex;
+      position: relative;
+      transition: box-shadow 600ms ease, border-color 600ms ease;
+    }
+
+    .video-card.is-playing {
+      border-color: rgba(244, 179, 123, 0.26);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.5), 0 0 42px rgba(214, 106, 118, 0.11), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .video-shell {
+      width: 100%;
+      min-height: 0;
+      overflow: hidden;
+      border-radius: clamp(15px, 1.8vw, 27px);
+      background: #050406;
+      position: relative;
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.055), inset 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-height: calc(100svh - 180px);
+      object-fit: contain;
+      background: #050406;
+    }
+
+    .video-error {
+      display: none;
+      position: absolute;
+      inset: 0;
+      place-items: center;
+      padding: 2rem;
+      color: var(--muted);
+      text-align: center;
+      background: #09070a;
+      line-height: 1.7;
+    }
+
+    .video-error.show { display: grid; }
+
+    .lyric-card {
+      min-height: 0;
+      border-radius: clamp(22px, 2.4vw, 38px);
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .lyric-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(244,179,123,.52), transparent);
+    }
+
+    .lyrics-head {
+      padding: clamp(20px, 2vw, 30px) clamp(20px, 2vw, 30px) 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .lyrics-head h2 {
+      margin: 0;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      color: var(--muted);
+    }
+
+    .duration {
+      color: var(--amber);
+      font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+    }
+
+    .lyrics {
+      position: relative;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(214, 106, 118, .35) transparent;
+      padding: 8px clamp(20px, 2vw, 30px) 30px;
+      scroll-behavior: smooth;
+      mask-image: linear-gradient(to bottom, transparent 0, black 28px, black calc(100% - 32px), transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 28px, black calc(100% - 32px), transparent 100%);
+    }
+
+    .line {
+      margin: 0;
+      padding: 0.72rem 0;
+      color: rgba(248, 241, 235, 0.58);
+      font-size: clamp(1rem, 1.18vw, 1.32rem);
+      font-weight: 500;
+      line-height: 1.75;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: color 700ms ease, opacity 700ms ease, transform 700ms ease, filter 700ms ease;
+      transition-delay: calc(var(--i) * 90ms);
+    }
+
+    .ready .line { opacity: 1; transform: translateY(0); }
+
+    .line.active {
+      color: #fff3e9;
+      transform: translateX(6px) scale(1.018);
+      filter: drop-shadow(0 0 10px rgba(244, 179, 123, 0.24));
+    }
+
+    .line.active::before {
+      content: "";
+      display: inline-block;
+      width: 14px;
+      height: 1px;
+      margin: 0 10px 0 -2px;
+      vertical-align: middle;
+      background: linear-gradient(90deg, var(--rose), var(--amber));
+      box-shadow: 0 0 9px rgba(244,179,123,.45);
+    }
+
+    .lyrics-foot {
+      padding: 18px clamp(20px, 2vw, 30px) clamp(20px, 2vw, 28px);
+      border-top: 1px solid rgba(255, 255, 255, 0.055);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .heart { color: var(--rose); }
+
+    @keyframes drift {
+      from { transform: translate3d(-4vw, -2vh, 0) scale(0.9); }
+      to { transform: translate3d(5vw, 4vh, 0) scale(1.1); }
+    }
+
+    @media (max-width: 860px) {
+      .page { height: auto; min-height: 100svh; padding: 20px 14px 28px; }
+      header { align-items: flex-start; }
+      h1 { font-size: clamp(2.1rem, 11vw, 3.7rem); }
+      .memory-tag { margin-top: 8px; font-size: 0.66rem; }
+      main { grid-template-columns: 1fr; }
+      .video-card { min-height: auto; }
+      video { height: auto; aspect-ratio: 1354 / 720; max-height: none; }
+      .lyric-card { min-height: 460px; height: min(64svh, 620px); }
+      .line { font-size: 1rem; }
+    }
+
+    @media (max-width: 500px) {
+      header { display: block; }
+      .memory-tag { margin-top: 14px; }
+      .lyrics-foot { letter-spacing: 0.06em; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+      .line { opacity: 1; transform: none; }
+      .line.active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient one" aria-hidden="true"></div>
+  <div class="ambient two" aria-hidden="true"></div>
+
+  <div class="page">
+    <header>
+      <div>
+        <p class="eyebrow">To good friends</p>
+        <h1>今宵多欢畅</h1>
+      </div>
+      <div class="memory-tag">一杯敬往事 · 一杯敬朋友</div>
+    </header>
+
+    <main>
+      <section class="video-card card" id="videoCard" aria-label="视频播放器">
+        <div class="video-shell">
+          <video id="memoryVideo" controls playsinline preload="metadata" aria-label="朋友相聚视频">
+            <source id="videoSource" src="Video-15-19-02.mp4" type="video/mp4">
+            你的浏览器暂不支持视频播放。
+          </video>
+          <div class="video-error" id="videoError" role="status">
+            <span>视频暂时无法播放<br>请刷新页面后再试</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="lyric-card card" aria-label="歌词">
+        <div class="lyrics-head">
+          <h2>此刻 · 朋友</h2>
+          <span class="duration">00:56</span>
+        </div>
+        <div class="lyrics" id="lyrics" tabindex="0">
+          <p class="line" style="--i:0">哦耶耶！桃花🌸谢了有玫瑰🌹</p>
+          <p class="line" style="--i:1">人生几十年，总会有风🌪雨🌧来陪</p>
+          <p class="line" style="--i:2">哦！潇潇洒洒赴会，今不醉不归🍺🍺</p>
+          <p class="line" style="--i:3">耶✌！往事后不后悔，慢慢去体会</p>
+          <p class="line" style="--i:4">此刻朋友👫，这杯酒🍺最珍贵！</p>
+          <p class="line" style="--i:5">快把酒🍺满上，干了这杯🍺大声歌唱🎤</p>
+          <p class="line" style="--i:6">好朋友，好朋友👫，今宵多欢畅</p>
+          <p class="line" style="--i:7">理想改变了我们的模样👨</p>
+          <p class="line" style="--i:8">也让我懂得了珍惜朋友的肩膀💪</p>
+          <p class="line" style="--i:9">阳光☀总会在风🌪️雨🌧️之后撒向苍茫🍂</p>
+          <p class="line" style="--i:10">让我们抬起头🐷，学会了坚强💪</p>
+          <p class="line" style="--i:11">就像朋友的这杯烈酒🍺🍺烫在我心❤️上</p>
+          <p class="line" style="--i:12">温暖我，凡事别再放心❤️上</p>
+        </div>
+        <div class="lyrics-foot">
+          <span>风雨之后 · 仍有阳光</span>
+          <span class="heart">♥</span>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const page = document.querySelector('.page');
+    const video = document.getElementById('memoryVideo');
+    const videoSource = document.getElementById('videoSource');
+    const videoCard = document.getElementById('videoCard');
+    const videoError = document.getElementById('videoError');
+    const lyricsPanel = document.getElementById('lyrics');
+    const lines = [...document.querySelectorAll('.line')];
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let activeIndex = 0;
+    let focusTimer;
+    let reading = false;
+
+    requestAnimationFrame(() => page.classList.add('ready'));
+
+    function focusLine(index, shouldScroll = true) {
+      lines.forEach((line, lineIndex) => line.classList.toggle('active', lineIndex === index));
+      const userIsReading = reading || lyricsPanel.matches(':focus-within');
+      if (shouldScroll && !userIsReading && !reducedMotion) {
+        const centeredTop = lines[index].offsetTop - (lyricsPanel.clientHeight - lines[index].clientHeight) / 2;
+        lyricsPanel.scrollTo({ top: Math.max(0, centeredTop), behavior: 'smooth' });
+      }
+    }
+
+    function beginLyricFlow() {
+      if (reducedMotion || focusTimer) return;
+      focusLine(activeIndex, false);
+      focusTimer = window.setInterval(() => {
+        activeIndex = (activeIndex + 1) % lines.length;
+        focusLine(activeIndex);
+      }, 4200);
+    }
+
+    function pauseLyricFlow() {
+      window.clearInterval(focusTimer);
+      focusTimer = undefined;
+    }
+
+    video.addEventListener('play', () => {
+      videoCard.classList.add('is-playing');
+      beginLyricFlow();
+    });
+
+    video.addEventListener('pause', () => videoCard.classList.remove('is-playing'));
+    video.addEventListener('ended', () => {
+      videoCard.classList.remove('is-playing');
+      pauseLyricFlow();
+    });
+    const showVideoError = () => videoError.classList.add('show');
+    video.addEventListener('error', showVideoError);
+    videoSource.addEventListener('error', showVideoError);
+
+    lyricsPanel.addEventListener('pointerenter', () => { reading = true; });
+    lyricsPanel.addEventListener('pointerleave', () => { reading = false; });
+    lyricsPanel.addEventListener('focusin', () => { reading = true; });
+    lyricsPanel.addEventListener('focusout', () => {
+      window.setTimeout(() => {
+        if (!lyricsPanel.matches(':focus-within')) reading = false;
+      }, 0);
+    });
+    lyricsPanel.addEventListener('touchstart', () => { reading = true; }, { passive: true });
+    lyricsPanel.addEventListener('touchend', () => {
+      window.setTimeout(() => { reading = false; }, 1800);
+    }, { passive: true });
+
+    if (!reducedMotion) {
+      focusLine(0, false);
+      beginLyricFlow();
+    }
+  </script>
+</body>
+</html>
